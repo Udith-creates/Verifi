@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "@inquirer/password": "^4.0.2",
-    "@openzeppelin/contracts": "^5.0.2",
+    "@openzeppelin/contracts": "4.9.3",
     "@typechain/ethers-v6": "^0.5.1",
     "circomlib": "^2.0.5",
     "dotenv": "^16.4.5",

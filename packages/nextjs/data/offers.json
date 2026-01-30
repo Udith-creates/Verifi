@@ -5,5 +5,33 @@
     "active": true,
     "description": "Local Metadata",
     "timestamp": "2026-01-30T11:15:45.523Z"
+  },
+  {
+    "amount": "10",
+    "minScore": "25",
+    "active": true,
+    "description": "Local Metadata",
+    "timestamp": "2026-01-30T14:48:23.571Z"
+  },
+  {
+    "amount": "10",
+    "minScore": "25",
+    "active": true,
+    "description": "Local Metadata",
+    "timestamp": "2026-01-30T14:48:23.574Z"
+  },
+  {
+    "amount": "10",
+    "minScore": "28",
+    "active": true,
+    "description": "Local Metadata",
+    "timestamp": "2026-01-30T18:22:45.882Z"
+  },
+  {
+    "amount": "1",
+    "minScore": "100",
+    "active": true,
+    "description": "Local Metadata",
+    "timestamp": "2026-01-30T18:26:12.263Z"
   }
 ]

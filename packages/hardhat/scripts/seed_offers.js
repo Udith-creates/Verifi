@@ -1,39 +1,44 @@
-const hre = require("hardhat");
-
 async function main() {
-    const [deployer] = await hre.ethers.getSigners();
+    console.log("🌱 Seeding loan offers on-chain...\n");
 
-    // Get the deployed LendingMarketplace contract
-    const LendingMarketplace = await hre.ethers.getContractFactory("LendingMarketplace");
-    const deployments = await hre.deployments.all();
+    const [deployer] = await ethers.getSigners();
+    console.log("Using account:", deployer.address);
 
-    if (!deployments.LendingMarketplace) {
-        console.error("LendingMarketplace not deployed yet!");
-        return;
-    }
+    // Get marketplace - update this address from your deployment
+    const marketplaceAddress = "0x9A676e781A523b5d0C0e43731313A708CB607508";
+    console.log("LendingMarketplace:", marketplaceAddress);
 
-    const marketplace = await hre.ethers.getContractAt(
-        "LendingMarketplace",
-        deployments.LendingMarketplace.address
-    );
+    const marketplace = await ethers.getContractAt("LendingMarketplace", marketplaceAddress);
 
-    console.log("Seeding offers to LendingMarketplace at:", deployments.LendingMarketplace.address);
+    // Create test offers
+    console.log("\n📝 Creating offers...\n");
 
-    // Offer #0: 1.5 ETH, Score 120
-    const tx1 = await marketplace.createOffer(120, {
-        value: hre.ethers.parseEther("1.5")
+    // Offer 0: 1 ETH, Min Score 100
+    console.log("Creating Offer #0: 1 ETH, Min Score 100");
+    let tx = await marketplace.createOffer(100, {
+        value: ethers.parseEther("1.0")
     });
-    await tx1.wait();
-    console.log("✅ Seeded Offer #0: 1.5 ETH, Min Score 120");
+    await tx.wait();
+    console.log("✅ Offer #0 created");
 
-    // Offer #1: 5.0 ETH, Score 500
-    const tx2 = await marketplace.createOffer(500, {
-        value: hre.ethers.parseEther("5.0")
+    // Offer 1: 2 ETH, Min Score 200
+    console.log("\nCreating Offer #1: 2 ETH, Min Score 200");
+    tx = await marketplace.createOffer(200, {
+        value: ethers.parseEther("2.0")
     });
-    await tx2.wait();
-    console.log("✅ Seeded Offer #1: 5.0 ETH, Min Score 500");
+    await tx.wait();
+    console.log("✅ Offer #1 created");
 
-    console.log("\n🎉 Seeding complete!");
+    // Offer 2: 0.5 ETH, Min Score 50
+    console.log("\nCreating Offer #2: 0.5 ETH, Min Score 50");
+    tx = await marketplace.createOffer(50, {
+        value: ethers.parseEther("0.5")
+    });
+    await tx.wait();
+    console.log("✅ Offer #2 created");
+
+    console.log("\n🎉 All offers created successfully!");
+    console.log("\nRefresh your browser to see them in the UI.");
 }
 
 main()
