@@ -1,91 +1,225 @@
-# 🏗 Scaffold-ETH 2
+# VeriFi - P2P Zero-Knowledge Lending Marketplace
 
-<h4 align="center">
-  <a href="https://docs.scaffoldeth.io">Documentation</a> |
-  <a href="https://scaffoldeth.io">Website</a>
-</h4>
+A decentralized peer-to-peer lending platform that uses **Zero-Knowledge Proofs** to verify creditworthiness without revealing private financial data.
 
-🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Solidity](https://img.shields.io/badge/solidity-0.8.20-brightgreen)
+![Next.js](https://img.shields.io/badge/next.js-15.5.9-black)
 
-> [!NOTE]
-> 🤖 Scaffold-ETH 2 is AI-ready! It has everything agents need to build on Ethereum. Check `.agents/`, `.claude/`, `.opencode` or `.cursor/` for more info.
+## 🌟 Features
 
-⚙️ Built using NextJS, RainbowKit, Foundry/Hardhat, Wagmi, Viem, and Typescript.
+### Privacy-Preserving Credit Verification
+- **Zero-Knowledge Proofs**: Borrowers prove creditworthiness without revealing income, assets, or debt
+- **Groth16 Protocol**: Efficient cryptographic proofs using circom and snarkjs
+- **Client-Side Generation**: All sensitive data stays on the user's device
 
-- ✅ **Contract Hot Reload**: Your frontend auto-adapts to your smart contract as you edit it.
-- 🪝 **[Custom hooks](https://docs.scaffoldeth.io/hooks/)**: Collection of React hooks wrapper around [wagmi](https://wagmi.sh/) to simplify interactions with smart contracts with typescript autocompletion.
-- 🧱 [**Components**](https://docs.scaffoldeth.io/components/): Collection of common web3 components to quickly build your frontend.
-- 🔥 **Burner Wallet & Local Faucet**: Quickly test your application with a burner wallet and local faucet.
-- 🔐 **Integration with Wallet Providers**: Connect to different wallet providers and interact with the Ethereum network.
+### Secure Lending Marketplace
+- **Smart Contract Escrow**: ETH locked in contract until proof verification
+- **Replay Attack Prevention**: Proofs are bound to specific offer thresholds
+- **On-Chain Verification**: Cryptographic proof validation in Solidity
 
-![Debug Contracts tab](https://github.com/scaffold-eth/scaffold-eth-2/assets/55535804/b237af0c-5027-4849-a5c1-2e31495cccb1)
+### User-Friendly Interface
+- **5 Dedicated Tabs**: Browse Offers, Generate Proof, Accept Loan, Lend, Verify Tool
+- **Real-Time Status**: Animated feedback for all operations
+- **Proof Download/Upload**: Export and independently verify proofs
 
-## Requirements
+## 🚀 Quick Start
 
-Before you begin, you need to install the following tools:
+### Prerequisites
+- Node.js 18+
+- Yarn
+- MetaMask or compatible Web3 wallet
 
-- [Node (>= v20.18.3)](https://nodejs.org/en/download/)
-- Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
-- [Git](https://git-scm.com/downloads)
+### Installation
 
-## Quickstart
+```bash
+# Clone the repository
+git clone https://github.com/Udith-creates/Verifi.git
+cd Verifi
 
-To get started with Scaffold-ETH 2, follow the steps below:
+# Install dependencies
+yarn install
 
-1. Install the latest version of Scaffold-ETH 2
-
+# Compile ZK circuits
+node packages/hardhat/scripts/compile_circuits.js
 ```
-npx create-eth@latest
-```
 
-This command will install all the necessary packages and dependencies, so it might take a while.
+### Running Locally
 
-> [!NOTE]
-> You can also initialize your project with one of our extensions to add specific features or starter-kits. Learn more in our [extensions documentation](https://docs.scaffoldeth.io/extensions/).
-
-2. Run a local network in the first terminal:
-
-```
+```bash
+# Terminal 1: Start local blockchain
 yarn chain
-```
 
-This command starts a local Ethereum network that runs on your local machine and can be used for testing and development. Learn how to [customize your network configuration](https://docs.scaffoldeth.io/quick-start/environment#1-initialize-a-local-blockchain).
+# Terminal 2: Deploy contracts
+yarn deploy --reset
 
-3. On a second terminal, deploy the test contract:
-
-```
-yarn deploy
-```
-
-This command deploys a test smart contract to the local network. You can find more information about how to customize your contract and deployment script in our [documentation](https://docs.scaffoldeth.io/quick-start/environment#2-deploy-your-smart-contract).
-
-4. On a third terminal, start your NextJS app:
-
-```
+# Terminal 3: Start frontend
 yarn start
 ```
 
-Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
+Access the app at `http://localhost:3001`
 
-**What's next**:
+## 📖 How It Works
 
-Visit the [What's next section of our docs](https://docs.scaffoldeth.io/quick-start/environment#whats-next) to learn how to:
+### For Lenders
+1. Navigate to **"Lend"** tab
+2. Enter loan amount (ETH) and minimum credit score
+3. Click **"Create Offer"**
+4. ETH is locked in smart contract
 
-- Edit your smart contracts
-- Edit your deployment scripts
-- Customize your frontend
-- Edit the app config
-- Writing and running tests
-- [Setting up external services and API keys](https://docs.scaffoldeth.io/deploying/deploy-smart-contracts#configuration-of-third-party-services-for-production-grade-apps)
+### For Borrowers
+1. Browse available offers in **"Browse Offers"** tab
+2. Note the Offer ID and required minimum score
+3. Go to **"Generate Proof"** tab
+4. Enter your financial data:
+   - Annual Income
+   - Total Assets
+   - Total Debt
+   - Required Threshold (from offer)
+5. Click **"Generate & Verify Proof"**
+6. Go to **"Accept Loan"** tab
+7. Enter Offer ID and submit proof
+8. Receive ETH instantly if proof is valid!
 
-## Documentation
+### The Math
+Your credit score is calculated as:
+```
+score = (income × 3) + assets - (debt × 2)
+```
 
-Visit our [docs](https://docs.scaffoldeth.io) to learn all the technical details and guides of Scaffold-ETH 2.
+The ZK proof verifies `score > threshold` **without revealing** the actual values.
 
-To know more about its features, check out our [website](https://scaffoldeth.io).
+## 🔧 Technology Stack
 
-## Contributing to Scaffold-ETH 2
+### Smart Contracts
+- **Solidity 0.8.20**: LendingMarketplace.sol
+- **Groth16 Verifier**: Auto-generated from circom circuit
+- **Hardhat**: Development environment
 
-We welcome contributions to Scaffold-ETH 2!
+### ZK Circuits
+- **circom**: Circuit definition language
+- **snarkjs**: Proof generation and verification
+- **Powers of Tau**: Trusted setup ceremony
 
-Please see [CONTRIBUTING.MD](https://github.com/scaffold-eth/scaffold-eth-2/blob/main/CONTRIBUTING.md) for more information and guidelines for contributing to Scaffold-ETH 2.
+### Frontend
+- **Next.js 15**: React framework
+- **Wagmi + RainbowKit**: Web3 wallet connection
+- **TailwindCSS + DaisyUI**: Styling
+- **TypeScript**: Type safety
+
+## 📁 Project Structure
+
+```
+Verifi/
+├── packages/
+│   ├── hardhat/
+│   │   ├── circuits/
+│   │   │   ├── creditScore.circom       # ZK circuit definition
+│   │   │   └── build/                   # Compiled circuit artifacts
+│   │   ├── contracts/
+│   │   │   ├── LendingMarketplace.sol   # Main lending contract
+│   │   │   └── Verifier.sol             # ZK proof verifier
+│   │   ├── deploy/
+│   │   │   └── 02_deploy_marketplace.ts # Deployment script
+│   │   └── scripts/
+│   │       └── compile_circuits.js      # Circuit compilation
+│   └── nextjs/
+│       ├── app/
+│       │   ├── api/offers/              # Local DB API
+│       │   └── page.tsx                 # Main page
+│       ├── components/
+│       │   └── LendingMarketplace.tsx   # Main UI component
+│       ├── data/
+│       │   └── offers.json              # Local offer storage
+│       └── public/circuits/             # Circuit artifacts for browser
+├── SYSTEM_STATUS.md                     # System documentation
+├── WALLET_SETUP.md                      # Wallet connection guide
+└── README.md                            # This file
+```
+
+## 🔐 Security Features
+
+### Zero-Knowledge Proofs
+- **Privacy**: Financial data never leaves the user's device
+- **Verifiability**: Cryptographic proof of creditworthiness
+- **Non-Interactive**: No back-and-forth communication needed
+
+### Smart Contract Security
+- **Threshold Binding**: Proofs are tied to specific offer requirements
+- **Replay Prevention**: Each proof is valid for only one offer
+- **Reentrancy Protection**: Standard security patterns
+- **Access Control**: Only proof holder can accept loan
+
+## 🧪 Testing
+
+### MetaMask Setup
+1. Add Hardhat Local network:
+   - **RPC URL**: `http://127.0.0.1:8545`
+   - **Chain ID**: `31337`
+   - **Currency**: `ETH`
+
+2. Import test account:
+   ```
+   Private Key: 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+   ```
+
+### Example Test Flow
+```javascript
+// Lender creates offer
+Income: 50000
+Assets: 10000
+Debt: 5000
+Threshold: 100
+
+// Calculated score: (50000 × 3) + 10000 - (5000 × 2) = 150000
+// Score > 100 ✅ Proof will be valid
+```
+
+## 📊 Circuit Details
+
+### Inputs
+- **Private**: `income`, `assets`, `debt`
+- **Public**: `threshold`
+
+### Constraints
+```circom
+signal calculatedScore <== (income * 3) + assets - (debt * 2);
+signal isValid <== GreaterThan(252)([calculatedScore, threshold]);
+```
+
+### Outputs
+- **Public**: `isValid` (1 if valid, 0 otherwise)
+
+## 🛣️ Roadmap
+
+- [ ] Multi-collateral support
+- [ ] Interest rate mechanisms
+- [ ] Loan repayment tracking
+- [ ] Credit history on-chain
+- [ ] Subgraph for event indexing
+- [ ] Mobile app
+- [ ] Mainnet deployment
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🙏 Acknowledgments
+
+- **Scaffold-ETH 2**: Rapid dApp development framework
+- **circom & snarkjs**: ZK proof infrastructure
+- **Groth16**: Efficient proof system
+- **Hardhat**: Ethereum development environment
+
+## 📞 Contact
+
+- GitHub: [@Udith-creates](https://github.com/Udith-creates)
+- Project: [VeriFi](https://github.com/Udith-creates/Verifi)
+
+---
+
+**Built with 🏗️ Scaffold-ETH 2 and 🔐 Zero-Knowledge Proofs**
