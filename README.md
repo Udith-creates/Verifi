@@ -208,18 +208,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 This project is licensed under the MIT License.
 
-## 🙏 Acknowledgments
-
-- **Scaffold-ETH 2**: Rapid dApp development framework
-- **circom & snarkjs**: ZK proof infrastructure
-- **Groth16**: Efficient proof system
-- **Hardhat**: Ethereum development environment
-
-## 📞 Contact
-
-- GitHub: [@Udith-creates](https://github.com/Udith-creates)
-- Project: [VeriFi](https://github.com/Udith-creates/Verifi)
-
 ---
 
-**Built with 🏗️ Scaffold-ETH 2 and 🔐 Zero-Knowledge Proofs**
+**Built with Zero-Knowledge Proofs for Privacy-Preserving DeFi**
