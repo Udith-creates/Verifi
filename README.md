@@ -1,213 +1,68 @@
-# VeriFi - P2P Zero-Knowledge Lending Marketplace
+# VeriFi: Zero-Knowledge Reputation Lending Protocol
 
-A decentralized peer-to-peer lending platform that uses **Zero-Knowledge Proofs** to verify creditworthiness without revealing private financial data.
+VeriFi is a decentralized lending platform that uses **Zero-Knowledge Proofs (ZKPs)** to verify a borrower's creditworthiness without revealing their actual financial data.
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Solidity](https://img.shields.io/badge/solidity-0.8.20-brightgreen)
-![Next.js](https://img.shields.io/badge/next.js-15.5.9-black)
+Built with 🏗 [Scaffold-ETH 2](https://scaffoldeth.io), Circom, and SnarkJS.
 
-## 🌟 Features
+## 🌟 Key Features
 
-### Privacy-Preserving Credit Verification
-- **Zero-Knowledge Proofs**: Borrowers prove creditworthiness without revealing income, assets, or debt
-- **Groth16 Protocol**: Efficient cryptographic proofs using circom and snarkjs
-- **Client-Side Generation**: All sensitive data stays on the user's device
+- **Private Solvency Check:** Users generate a local ZK proof that their `(Income * 3 + Assets - Debt * 2)` exceeds a lender's threshold.
+- **On-Chain Verification:** The `Groth16Verifier` smart contract verifies the proof on Ethereum (or L2s).
+- **Reputation SBTs:** Borrowers earn Soulbound Tokens (SBTs) upon repaying loans, building on-chain reputation.
+- **IPFS Integration:** Reputation badges have metadata stored on IPFS.
 
-### Secure Lending Marketplace
-- **Smart Contract Escrow**: ETH locked in contract until proof verification
-- **Replay Attack Prevention**: Proofs are bound to specific offer thresholds
-- **On-Chain Verification**: Cryptographic proof validation in Solidity
+## 🔐 How ZK Verification Works
 
-### User-Friendly Interface
-- **5 Dedicated Tabs**: Browse Offers, Generate Proof, Accept Loan, Lend, Verify Tool
-- **Real-Time Status**: Animated feedback for all operations
-- **Proof Download/Upload**: Export and independently verify proofs
+VeriFi uses `circom` circuits to prove computational integrity.
+
+1.  **Off-Chain (Client Side):**
+    - The user inputs their financial data: `Income`, `Assets`, `Debt`.
+    - A randomly generated `Threshold` is provided by the lender (or system).
+    - The `creditScore.circom` circuit computes: `Score = (Income * 3) + Assets - (Debt * 2)`.
+    - It checks if `Score > Threshold`.
+    - **Crucially:** The proof contains NO information about the actual income or debt values. It only reveals `true/false` (Solvency Valid) and the `Threshold` used.
+
+2.  **On-Chain (Smart Contract):**
+    - The user submits the generated `Proof` (pA, pB, pC) and `Public Signals` (Threshold) to the `LendingMarketplace`.
+    - The contract calls `Verifier.verifyProof(...)`.
+    - If valid, the contract marks the user as `Solvent` for a temporary period (e.g., 90 days), allowing them to accept loans.
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Node.js 18+
-- Yarn
-- MetaMask or compatible Web3 wallet
+1.  **Install Dependencies:**
+    ```bash
+    yarn install
+    ```
 
-### Installation
+2.  **Start Local Chain:**
+    ```bash
+    yarn chain
+    ```
 
-```bash
-# Clone the repository
-git clone https://github.com/Udith-creates/Verifi.git
-cd Verifi
+3.  **Compile Circuits & Deploy Contracts:**
+    ```bash
+    # This compiles circuits, generates verifier, and deploys
+    yarn deploy --reset
+    ```
 
-# Install dependencies
-yarn install
+4.  **Start Frontend:**
+    ```bash
+    yarn start
+    ```
 
-# Compile ZK circuits
-node packages/hardhat/scripts/compile_circuits.js
-```
+5.  **Visit App:**
+    `http://localhost:3000`
 
-### Running Locally
+## 🛠 Tech Stack
 
-```bash
-# Terminal 1: Start local blockchain
-yarn chain
-
-# Terminal 2: Deploy contracts
-yarn deploy --reset
-
-# Terminal 3: Start frontend
-yarn start
-```
-
-Access the app at `http://localhost:3001`
-
-## 📖 How It Works
-
-### For Lenders
-1. Navigate to **"Lend"** tab
-2. Enter loan amount (ETH) and minimum credit score
-3. Click **"Create Offer"**
-4. ETH is locked in smart contract
-
-### For Borrowers
-1. Browse available offers in **"Browse Offers"** tab
-2. Note the Offer ID and required minimum score
-3. Go to **"Generate Proof"** tab
-4. Enter your financial data:
-   - Annual Income
-   - Total Assets
-   - Total Debt
-   - Required Threshold (from offer)
-5. Click **"Generate & Verify Proof"**
-6. Go to **"Accept Loan"** tab
-7. Enter Offer ID and submit proof
-8. Receive ETH instantly if proof is valid!
-
-### The Math
-Your credit score is calculated as:
-```
-score = (income × 3) + assets - (debt × 2)
-```
-
-The ZK proof verifies `score > threshold` **without revealing** the actual values.
-
-## 🔧 Technology Stack
-
-### Smart Contracts
-- **Solidity 0.8.20**: LendingMarketplace.sol
-- **Groth16 Verifier**: Auto-generated from circom circuit
-- **Hardhat**: Development environment
-
-### ZK Circuits
-- **circom**: Circuit definition language
-- **snarkjs**: Proof generation and verification
-- **Powers of Tau**: Trusted setup ceremony
-
-### Frontend
-- **Next.js 15**: React framework
-- **Wagmi + RainbowKit**: Web3 wallet connection
-- **TailwindCSS + DaisyUI**: Styling
-- **TypeScript**: Type safety
-
-## 📁 Project Structure
-
-```
-Verifi/
-├── packages/
-│   ├── hardhat/
-│   │   ├── circuits/
-│   │   │   ├── creditScore.circom       # ZK circuit definition
-│   │   │   └── build/                   # Compiled circuit artifacts
-│   │   ├── contracts/
-│   │   │   ├── LendingMarketplace.sol   # Main lending contract
-│   │   │   └── Verifier.sol             # ZK proof verifier
-│   │   ├── deploy/
-│   │   │   └── 02_deploy_marketplace.ts # Deployment script
-│   │   └── scripts/
-│   │       └── compile_circuits.js      # Circuit compilation
-│   └── nextjs/
-│       ├── app/
-│       │   ├── api/offers/              # Local DB API
-│       │   └── page.tsx                 # Main page
-│       ├── components/
-│       │   └── LendingMarketplace.tsx   # Main UI component
-│       ├── data/
-│       │   └── offers.json              # Local offer storage
-│       └── public/circuits/             # Circuit artifacts for browser
-├── SYSTEM_STATUS.md                     # System documentation
-├── WALLET_SETUP.md                      # Wallet connection guide
-└── README.md                            # This file
-```
-
-## 🔐 Security Features
-
-### Zero-Knowledge Proofs
-- **Privacy**: Financial data never leaves the user's device
-- **Verifiability**: Cryptographic proof of creditworthiness
-- **Non-Interactive**: No back-and-forth communication needed
-
-### Smart Contract Security
-- **Threshold Binding**: Proofs are tied to specific offer requirements
-- **Replay Prevention**: Each proof is valid for only one offer
-- **Reentrancy Protection**: Standard security patterns
-- **Access Control**: Only proof holder can accept loan
-
-## 🧪 Testing
-
-### MetaMask Setup
-1. Add Hardhat Local network:
-   - **RPC URL**: `http://127.0.0.1:8545`
-   - **Chain ID**: `31337`
-   - **Currency**: `ETH`
-
-2. Import test account:
-   ```
-   Private Key: 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
-   ```
-
-### Example Test Flow
-```javascript
-// Lender creates offer
-Income: 50000
-Assets: 10000
-Debt: 5000
-Threshold: 100
-
-// Calculated score: (50000 × 3) + 10000 - (5000 × 2) = 150000
-// Score > 100 ✅ Proof will be valid
-```
-
-## 📊 Circuit Details
-
-### Inputs
-- **Private**: `income`, `assets`, `debt`
-- **Public**: `threshold`
-
-### Constraints
-```circom
-signal calculatedScore <== (income * 3) + assets - (debt * 2);
-signal isValid <== GreaterThan(252)([calculatedScore, threshold]);
-```
-
-### Outputs
-- **Public**: `isValid` (1 if valid, 0 otherwise)
-
-## 🛣️ Roadmap
-
-- [ ] Multi-collateral support
-- [ ] Interest rate mechanisms
-- [ ] Loan repayment tracking
-- [ ] Credit history on-chain
-- [ ] Subgraph for event indexing
-- [ ] Mobile app
-- [ ] Mainnet deployment
+- **Frontend:** Next.js, TailwindCSS, RainbowKit
+- **Smart Contracts:** Solidity, OpenZeppelin
+- **ZK Circuits:** Circom, SnarkJS
+- **Blockchain:** Hardhat (Local), Sepolia (Live)
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-This project is licensed under the MIT License.
+Contributions are welcome! Please fork the repo and submit a PR.
 
 ---
-
-**Built with Zero-Knowledge Proofs for Privacy-Preserving DeFi**
+*Built by Udith*
