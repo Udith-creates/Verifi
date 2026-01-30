@@ -55,10 +55,26 @@ VeriFi uses `circom` circuits to prove computational integrity.
 
 ## 🛠 Tech Stack
 
-- **Frontend:** Next.js, TailwindCSS, RainbowKit
-- **Smart Contracts:** Solidity, OpenZeppelin
-- **ZK Circuits:** Circom, SnarkJS
-- **Blockchain:** Hardhat (Local), Sepolia (Live)
+### Core Frameworks
+- **Scaffold-ETH 2:** Development stack for rapid Ethereum prototyping.
+- **Hardhat:** Ethereum development environment for compiling and deploying smart contracts.
+- **Next.js:** React framework for the frontend interface.
+
+### Zero-Knowledge Proofs
+- **Circom:** DSL for writing arithmetic circuits to define the credit score logic.
+- **SnarkJS:** Library for generating ZK proofs (witness calculation) and verifying them.
+- **Groth16:** The proving system used for efficient on-chain verification.
+
+### Blockchain & Smart Contracts
+- **Solidity:** Programming language for the contracts (`LendingMarketplace.sol`, `ReputationSBT.sol`).
+- **OpenZeppelin:** Standard libraries for logic like `ERC721` (for SBTs) and `Ownable`.
+- **IPFS:** Decentralized storage for Reputation Badge metadata and images.
+
+### Frontend Libraries
+- **RainbowKit:** Wallet connection interface.
+- **Wagmi / Viem:** React hooks and utilities for interacting with Ethereum.
+- **TailwindCSS:** Utility-first CSS framework for styling.
+- **DaisyUI:** Component library for UI elements (modals, cards, buttons).
 
 ## 🤝 Contributing
 
